@@ -260,7 +260,7 @@ function CamlinTable({ voltageReadings }: voltageReadingProps) {
   }
 
   return (
-    <Card variant="outlined">
+    <Card variant="outlined" style={{ maxWidth: "100vw", overflow: "auto" }}>
       <Input
         placeholder="Search"
         inputProps={{ "aria-label": "description" }}
