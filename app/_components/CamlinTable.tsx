@@ -295,20 +295,22 @@ function CamlinTable({ voltageReadings }: voltageReadingProps) {
         <TableHead>
           <TableRow>
             <TableCell>
-              Name{" "}
-              <div data-testid="nameSort" onClick={handleNameSort}>
+              <span data-testid="nameSort" onClick={handleNameSort}>
+                Name{" "}
                 {sort.nameSort == "asc" ? (
-                  <FaSortDown />
+                  <FaSortDown onChange={() => sortNameDir(sort.nameSort)} />
                 ) : sort.nameSort == "desc" ? (
-                  <FaSortUp />
+                  <FaSortUp onChange={() => sortNameDir(sort.nameSort)} />
                 ) : (
-                  <TiArrowUnsorted />
+                  <TiArrowUnsorted
+                    onChange={() => sortNameDir(sort.nameSort)}
+                  />
                 )}
-              </div>
+              </span>
             </TableCell>
             <TableCell>
-              Region
-              <div data-testid="regionSort" onClick={handleRegionSort}>
+              <span data-testid="regionSort" onClick={handleRegionSort}>
+                Region{" "}
                 {sort.regionSort == "asc" ? (
                   <FaSortDown />
                 ) : sort.regionSort == "desc" ? (
@@ -316,11 +318,11 @@ function CamlinTable({ voltageReadings }: voltageReadingProps) {
                 ) : (
                   <TiArrowUnsorted />
                 )}
-              </div>
+              </span>
             </TableCell>
             <TableCell>
-              Health{" "}
-              <div data-testid="healthSort" onClick={handleHealthSort}>
+              <span data-testid="healthSort" onClick={handleHealthSort}>
+                Health{" "}
                 {sort.healthSort == "asc" ? (
                   <FaSortDown />
                 ) : sort.healthSort == "desc" ? (
@@ -328,7 +330,7 @@ function CamlinTable({ voltageReadings }: voltageReadingProps) {
                 ) : (
                   <TiArrowUnsorted />
                 )}
-              </div>
+              </span>
             </TableCell>
           </TableRow>
         </TableHead>

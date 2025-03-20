@@ -7,7 +7,10 @@ const CamlinLineChart = dynamic(
   }
 );
 //import CamlinLineChart from "../_components/CamlinLineChart";
-import CamlinTable from "../_components/CamlinTable";
+const CamlinTable = dynamic(() => import("../_components/CamlinTable"), {
+  ssr: false,
+});
+//import CamlinTable from "../_components/CamlinTable";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid2";
 import Image from "next/image";
