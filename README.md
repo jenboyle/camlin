@@ -2,7 +2,13 @@
 
 ## Running Project locally
 
-First, build the project:
+Run npm install:
+
+```bash
+npm install
+```
+
+Build the project:
 
 ```bash
 npm run build
@@ -36,6 +42,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Running Project on Docker Container locally
 
+Note: You need to obtain SUPABASE keys in .env.local file
+
 Build dockerized Next.js app
 
 ```bash
@@ -60,6 +68,26 @@ docker run -p 3000:3000 camlin
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-Note: You need to obtain SUPABASE keys
+
+Take another terminal - check container spun up
+
+```bash
+docker ps
+```
+
+```bash
+CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS          PORTS                    NAMES
+5dbc4273bd71   camlin    "docker-entrypoint.s…"   11 seconds ago   Up 11 seconds   0.0.0.0:3000->3000/tcp   wonderful_mcnulty
+```
+
+Enter the container
+
+```bash
+docker exec -ti 5db /bin/sh
+```
 
 ## Pull image from DockerHub todo
+
+```bash
+docker pull dockergroovyjen/camlin:v1.0
+```
