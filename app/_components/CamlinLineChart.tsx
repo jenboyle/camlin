@@ -18,16 +18,50 @@ import Card from "@mui/material/Card";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { ChangeEvent, useEffect, useState } from "react";
+import { useLocalStorage } from "usehooks-ts";
 
 function CamlinLineChart({ voltageReadings }: voltageReadingProps) {
   const [toggleMap, setToggleMap] = useState(new Map());
 
+  const [persistedCheckboxes, setPersistedCheckboxes] = useLocalStorage(
+    "transformers",
+    {
+      transformers: voltageReadings.map((reading) => {
+        return new Map(
+          toggleMap.set(
+            reading.name,
+            localStorage.getItem("transformers")
+              ? JSON.parse(localStorage.getItem("transformers")!)[reading.name]
+              : true
+          )
+        );
+      }),
+    },
+    { initializeWithValue: false }
+  );
+
   useEffect(() => {
-    voltageReadings.map((reading) => {
-      setToggleMap(
-        (prevToggleMap) => new Map(prevToggleMap.set(reading.name, true))
-      );
-    });
+    if (
+      localStorage != undefined &&
+      localStorage.getItem("transformers") != undefined &&
+      localStorage.getItem("transformers")!.length != 0
+    ) {
+      const obj = JSON.parse(localStorage.getItem("transformers")!);
+      voltageReadings.map((reading) => {
+        const updatedToggleMap = new Map(
+          toggleMap.set(reading.name, obj[reading.name])
+        );
+        setToggleMap(updatedToggleMap);
+        setPersistedCheckboxes(Object.fromEntries(updatedToggleMap));
+      });
+    } else {
+      voltageReadings.map((reading) => {
+        const updatedToggleMap = new Map(toggleMap.set(reading.name, true));
+        setToggleMap(updatedToggleMap);
+        setPersistedCheckboxes(Object.fromEntries(updatedToggleMap));
+      });
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -35,20 +69,18 @@ function CamlinLineChart({ voltageReadings }: voltageReadingProps) {
     e: ChangeEvent<HTMLInputElement>,
     reading: voltageReadingType
   ) {
-    setToggleMap(
-      (prevToggleMap) =>
-        new Map(
-          prevToggleMap.set(
-            reading.name,
-            (e.target as HTMLInputElement).checked
-          )
-        )
+    const updatedToggleMap = new Map(
+      toggleMap.set(reading.name, (e.target as HTMLInputElement).checked)
     );
+    setToggleMap(updatedToggleMap);
+
+    //console.log(toggleMap);
+    //console.log(JSON.parse(JSON.stringify(persistedCheckboxes)));
+
+    setPersistedCheckboxes(Object.fromEntries(updatedToggleMap));
   }
-  //   function handleTransformerReadingToggle(e: MouseEvent<HTMLButtonElement>) {
-  // if(e.target.value)
-  //   }
-  //onClick={handleTransformerReadingToggle}
+
+  //checked={persistedCheckboxes.transformers.get(reading.name)}
   return (
     <Card variant="outlined">
       <span className="inline">
@@ -60,20 +92,16 @@ function CamlinLineChart({ voltageReadings }: voltageReadingProps) {
             control={
               <Checkbox
                 value={reading.name}
-                defaultChecked
                 onChange={(e) => handleTransformerReadingToggle(e, reading)}
+                checked={toggleMap.get(reading.name)}
               />
             }
             label={reading.name}
             labelPlacement="start"
           />
         ))}
-        <ResponsiveContainer height={300} width={700}>
-          <LineChart
-            width={730}
-            height={250}
-            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-          >
+        <ResponsiveContainer height={300} width="90%">
+          <LineChart margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey="timestamp"
@@ -98,9 +126,9 @@ function CamlinLineChart({ voltageReadings }: voltageReadingProps) {
                 offset: 10,
               }}
             />
-            <Tooltip />
+            <Tooltip labelFormatter={(t) => new Date(t).toLocaleString()} />
             <Legend />
-
+            <div>{JSON.stringify(persistedCheckboxes.transformers)}</div>
             {voltageReadings.map((s, index) =>
               toggleMap.get(s.name) ? (
                 <Line

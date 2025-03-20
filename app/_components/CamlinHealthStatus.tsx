@@ -1,3 +1,4 @@
+"use client";
 import Tooltip from "@mui/material/Tooltip";
 import { FaHeartbeat } from "react-icons/fa";
 import {
