@@ -9,6 +9,10 @@ jobs:
   Jest:
     runs-on: ubuntu-latest
     environment: test
+    env:
+      SUPABASE_KEY: ${{ secrets.SUPABASE_KEY}}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL}}
+      SUPABASEURL: ${{ secrets.SUPABASE_URL}}
 
     strategy:
       matrix:
